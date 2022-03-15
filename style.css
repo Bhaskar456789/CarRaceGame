@@ -1,0 +1,58 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.hide{
+    display: none;
+}
+.carl,.enemy{
+    width: 50px;
+    height: 100px;
+    position: absolute;
+    bottom: 120px;
+    overflow: hidden;
+    background-image: url('./images/carimg.png');
+    background-size:100% ;
+    background-repeat: no-repeat;
+            
+ }
+.enemy{
+    background-image: url('./images/carimg2.jpg');
+            
+ }
+.gameArea{
+           
+            width: 50vh;
+            height: 100vh;
+            background-color: black;
+            margin: auto;
+            position: relative; 
+            border-right: 7px dashed #f7e713;
+            border-left: 7px dashed #f7e713;
+}
+.lines{
+    
+     width: 10px;
+     height: 100px;
+     position: absolute;
+     background-color: white;
+     margin-left: 50%;
+}
+.startScreen{
+        position:absolute;
+        left:50%;
+        top:50%;
+        transform: translate(-50%,-50%);
+        color:white;
+        z-index: 1;
+        background-color: #000000;
+        border:1px solid #ff6b66;
+        padding: 15px;    
+        margin: auto;   
+        text-align:center;
+        font-size: 20px;
+        height: 100px;
+        padding: 30px;
+        cursor: pointer;
+    
+}  

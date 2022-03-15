@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarRace</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    
+    <div class="game">
+        <div class="score"></div>
+        <div class="startScreen">
+            <p> Click here to START the RaceCar Game<br/>
+                Use Arrow Keys to MOVE<br/>
+                Try you Luck , if you hit Another CAR , you LOSE
+            </p>
+        </div>
+        <div class="gameArea"></div>
+    </div>
+    <script>
+        const score=document.querySelector(".score");
+        const startScreen=document.querySelector(".startScreen");
+        const gameArea=document.querySelector(".gameArea");
+        
+        let keys={
+            ArrowUp:false,
+            ArrowLeft:false,
+            ArrowRight:false,
+            ArrowDown:false
+        }
+        document.addEventListener("keydown",keyPress);
+        document.addEventListener("keyup", keyReleased);
+
+        function keyPress(e){
+            if(e.key=="ArrowUp"||e.key=="ArrowDown"||e.key=="ArrowRight"||e.key=="ArrowLeft"){
+            keys[e.key]=true
+            // console.log(keys);
+            }
+            e.preventDefault()
+        }
+        function keyReleased(e){
+            if(e.key=="ArrowUp"||e.key=="ArrowDown"||e.key=="ArrowRight"||e.key=="ArrowLeft"){
+            keys[e.key]=false;
+            // console.log(keys);
+            }
+            e.preventDefault()
+        }
+
+        let player ={
+            speed: 5,
+            score:0
+        }
+
+
+        function isCollide(a,b)
+        {
+            aRect = a.getBoundingClientRect();
+            bRect = b.getBoundingClientRect();
+    
+            return !((aRect.bottom < bRect.top) || (aRect.top > bRect.bottom ) || (aRect.right < bRect.left) || (aRect.left > bRect.right))
+        }
+
+        function dashedLines(){
+                    let lines = document.querySelectorAll(".lines");
+                    lines.forEach(function(item){
+                    if(item.y >= 750){
+                        item.y = -50; 
+                    }
+                    item.y += player.speed;
+                    item.style.top= item.y + "px";
+            })
+        }
+
+        function endGame(){
+            player.start=false
+            startScreen.classList.remove('hide')
+            startScreen.innerHTML="Game over<br>Your final score is "+player.score+"<br>  Press here to restart the game"
+
+
+        }
+
+        function moveEnemy(car){
+            let enemy = document.querySelectorAll(".enemy");
+            enemy.forEach(function(item){
+                    if(isCollide(car,item)){
+                    //Calling Hit Game Function
+                    endGame();
+                     }
+    
+                    if(item.y >= 700){
+                        item.y = -300; 
+                        item.style.left=Math.floor(Math.random()*250) + "px";
+                    }
+                    item.y += player.speed;
+                    item.style.top= item.y + "px";
+                    })
+        }
+        startScreen.addEventListener("click",startGame);
+        
+
+        function playGame(){
+            console.log("I am in game");
+            // selecting the car created in startGame using its class/id
+            let car=document.querySelector('.carl');
+            let road=gameArea.getBoundingClientRect();
+            
+            if(player.start){
+                dashedLines();
+                moveEnemy(car);
+                if(keys.ArrowUp && player.y>road.top){
+                    player.y=player.y-player.speed;
+                }
+                if(keys.ArrowDown && player.y< (road.bottom-70)){
+                    player.y=player.y+player.speed;
+                }
+                if(keys.ArrowLeft && player.x>0){
+                    player.x=player.x-player.speed;
+                }
+                if(keys.ArrowRight&& player.x< (road.width-90)){
+                    player.x=player.x+player.speed;
+                }
+                car.style.left=player.x+'px';
+                car.style.top=player.y+'px';
+                window.requestAnimationFrame(playGame);
+                score.innerText=" Score:   " + player.score;
+                player.score++;
+                
+
+            }
+        }
+       
+
+        
+        
+        function startGame(){
+           // console.log("Hello Game Started!!!");
+           // Added and removed the class
+           gameArea.innerHTML="";
+            startScreen.classList.add("hide");
+            gameArea.innerHTML=""
+            player.start = true;
+            player.score=0
+            // adding the lines on road
+            for (x = 0; x < 5; x++) {
+
+                let roadline = document.createElement('div')
+                roadline.setAttribute('class', 'lines')
+                roadline.y = (x * 150)
+                roadline.style.top = roadline.y + "px"
+
+                gameArea.appendChild(roadline)
+            }
+            window.requestAnimationFrame(playGame);
+                
+            
+            
+                // Create car element so that many cars will be append dynamically
+                let car= document.createElement("div");
+                car.innerText= "Car";
+                // defining class car
+                car.setAttribute('class','carl');
+                gameArea.appendChild(car);
+
+                player.x=car.offsetLeft;
+                player.y=car.offsetTop;
+                console.log(player);
+                for (x = 0; x < 3; x++) {
+
+                let enemycar = document.createElement('div')
+                enemycar.setAttribute('class', 'enemy')
+                enemycar.y = ((x + 1) *350) * -1
+                enemycar.style.top = enemycar.y + "px"
+                enemycar.style.left = Math.floor(Math.random() * 350) + "px"
+                gameArea.appendChild(enemycar)
+                }
+               
+        }
+        
+       
+        
+        
+       
+    </script>
+</body>
+</html>
